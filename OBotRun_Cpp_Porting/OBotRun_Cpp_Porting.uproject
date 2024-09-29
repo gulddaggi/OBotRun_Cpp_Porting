@@ -7,7 +7,10 @@
 		{
 			"Name": "OBotRun_Cpp_Porting",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
