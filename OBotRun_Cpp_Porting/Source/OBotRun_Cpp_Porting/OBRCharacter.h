@@ -33,6 +33,8 @@ public:
 
 	void JumpOBot();
 
+	void MoveForward();
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	USpringArmComponent* SpringArm;
@@ -48,4 +50,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = Input)
 	class UInputAction* JumpOBotAction;
+
+	FTimerHandle MoveForwardTimerHandle;
+	FTimerHandle JumpTimerHandle;
+
+	bool EnableJump;
+	float JumpDelay;
+
+	void SetEnableJump();
 };

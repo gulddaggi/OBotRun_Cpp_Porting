@@ -2,6 +2,7 @@
 
 
 #include "OBRCharacter.h"
+#include "OBRAnimInstance.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
@@ -50,13 +51,29 @@ AOBRCharacter::AOBRCharacter()
 	{
 		JumpOBotAction = IA_JUMPOBOT.Object;
 	}
+
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance> OBOT_ANIM(TEXT("/Game/Blueprints/ABP_OBot.ABP_OBot_C"));
+	if (OBOT_ANIM.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(OBOT_ANIM.Class);
+	}
+
+	// Init Values
+	EnableJump = true;
+	JumpDelay = 2.5f;
+	GetCharacterMovement()->JumpZVelocity = 900.0f;
+
 }
 
 // Called when the game starts or when spawned
 void AOBRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	MoveForward();
+	GetWorld()->GetTimerManager().SetTimer(MoveForwardTimerHandle, this, &AOBRCharacter::MoveForward, 0.01f, true, 0.01f);
 }
 
 // Called every frame
@@ -102,5 +119,21 @@ void AOBRCharacter::MoveRightOBot(const FInputActionValue& Value)
 
 void AOBRCharacter::JumpOBot()
 {
+	if (EnableJump)
+	{
+		Jump();
+		EnableJump = false;
+		GetWorld()->GetTimerManager().SetTimer(JumpTimerHandle, this, &AOBRCharacter::SetEnableJump, JumpDelay, false, JumpDelay);
+	}
+}
 
+void AOBRCharacter::MoveForward()
+{
+	GetCharacterMovement()->MaxWalkSpeed += 0.05f;
+	AddMovementInput(GetActorForwardVector() * 2);
+}
+
+void AOBRCharacter::SetEnableJump()
+{
+	EnableJump = true;
 }
