@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "OBRFloorLeftCorner.h"
+#include "OBRCharacter.h"
+
 
 AOBRFloorLeftCorner::AOBRFloorLeftCorner()
 {
@@ -40,6 +41,17 @@ AOBRFloorLeftCorner::AOBRFloorLeftCorner()
 	WallRU->SetRelativeScale3D(FVector(1.0f, 1.0f, 2.0f));
 
 	NextSpawnPoint->SetRelativeLocationAndRotation(FVector(0.0f, -125.0f, 0.0f), FRotator(0.0f, -90.0f, 0.0f));
+	NextSpawnPoint->SetRelativeScale3D(FVector((1.0f / 3.0f), (1.0f / 3.0f), 1.0f));
 	EndTrigger->SetRelativeLocationAndRotation(FVector(0.0f, -155.0f, 350.0f), FRotator(0.0f, -90.0f, 0.0f));
 	TurnZone->SetBoxExtent(FVector(120.0f, 120.0f, 500.0f));
+}
+
+void AOBRFloorLeftCorner::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	auto OBot = Cast<AOBRCharacter>(OtherActor);
+
+	if (OBot != nullptr)
+	{
+		OnPlayerReachedEndTrigger.Broadcast();
+	}
 }

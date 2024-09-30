@@ -16,4 +16,10 @@ class OBOTRUN_CPP_PORTING_API AOBRMainGameMode : public AGameModeBase
 	
 public:
 	AOBRMainGameMode();
+	
+	UPROPERTY()
+	class AOBRFloorSpawner* Spawner;
+
+protected:
+	virtual void BeginPlay() override;
 };

@@ -2,6 +2,7 @@
 
 
 #include "OBRFloorStraight.h"
+#include "OBRCharacter.h"
 
 
 AOBRFloorStraight::AOBRFloorStraight()
@@ -40,4 +41,16 @@ AOBRFloorStraight::AOBRFloorStraight()
 
 	NextSpawnPoint->SetRelativeLocation(FVector(125.0f, 0.0f, 0.0f));
 	EndTrigger->SetRelativeLocation(FVector(155.0f, 0.0f, 350.0f));
+
+	EnableSpawn = true;
+}
+
+void AOBRFloorStraight::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AOBRCharacter* OBot = Cast<AOBRCharacter>(OtherActor);
+
+	if (OBot != nullptr)
+	{
+		OnPlayerReachedEndTrigger.Broadcast();
+	}
 }

@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "OBRFloor.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnPlayerReachedEndTrigger);
+
 UCLASS()
 class OBOTRUN_CPP_PORTING_API AOBRFloor : public AActor
 {
@@ -16,12 +18,12 @@ public:
 	// Sets default values for this actor's properties
 	AOBRFloor();
 
+	FTransform GetNextSpawnTransform() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	FTransform GetNextSpawnTransform() const;
-	
 	UPROPERTY(VisibleAnywhere, Category = Mesh)
 	UStaticMeshComponent* FloorMesh;
 
@@ -31,8 +33,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = Point)
 	UArrowComponent* NextSpawnPoint;
 
+	UFUNCTION()
+	virtual void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	FOnPlayerReachedEndTrigger OnPlayerReachedEndTrigger;
 
 };
