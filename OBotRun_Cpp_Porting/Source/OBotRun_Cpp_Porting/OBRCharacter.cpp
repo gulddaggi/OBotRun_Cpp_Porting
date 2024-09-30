@@ -13,7 +13,7 @@ AOBRCharacter::AOBRCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// CreateComponents
+	// Create Components
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 
@@ -21,7 +21,7 @@ AOBRCharacter::AOBRCharacter()
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	Camera->SetupAttachment(SpringArm);
 
-	// SetProperties
+	// Set Properties
 	SpringArm->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
 	SpringArm->TargetArmLength = 350.0f;
 	Camera->SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));

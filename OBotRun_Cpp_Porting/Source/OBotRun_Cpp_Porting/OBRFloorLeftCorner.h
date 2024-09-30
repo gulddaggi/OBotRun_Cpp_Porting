@@ -1,0 +1,34 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "OBotRun_Cpp_Porting.h"
+#include "OBRFloor.h"
+#include "OBRFloorLeftCorner.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class OBOTRUN_CPP_PORTING_API AOBRFloorLeftCorner : public AOBRFloor
+{
+	GENERATED_BODY()
+	
+private:
+	AOBRFloorLeftCorner();
+
+	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	UStaticMeshComponent* WallFD;
+
+	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	UStaticMeshComponent* WallFU;
+
+	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	UStaticMeshComponent* WallRD;
+
+	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	UStaticMeshComponent* WallRU;
+
+	UPROPERTY(VisibleAnywhere, Category = Trigger)
+	UBoxComponent* TurnZone;
+};
