@@ -62,6 +62,7 @@ AOBRCharacter::AOBRCharacter()
 
 	// Init Values
 	EnableJump = true;
+	EnableTurn = false;
 	JumpDelay = 2.5f;
 	GetCharacterMovement()->JumpZVelocity = 900.0f;
 
@@ -114,7 +115,14 @@ void AOBRCharacter::PossessedBy(AController* NewController)
 
 void AOBRCharacter::MoveRightOBot(const FInputActionValue& Value)
 {
-	AddMovementInput(GetActorRightVector() * 2.0f, Value.Get<float>());
+	if (EnableTurn)
+	{
+		Turn(Value.Get<float>());
+	}
+	else
+	{
+		AddMovementInput(GetActorRightVector() * 2.0f, Value.Get<float>());
+	}
 }
 
 void AOBRCharacter::JumpOBot()
@@ -136,4 +144,17 @@ void AOBRCharacter::MoveForward()
 void AOBRCharacter::SetEnableJump()
 {
 	EnableJump = true;
+}
+
+void AOBRCharacter::SetEnableTurn()
+{
+	EnableTurn = true;
+}
+
+void AOBRCharacter::Turn(float AxisValue)
+{
+	EnableTurn = false;
+	FRotator TargetRotator = GetControlRotation() + FRotator(0.0f, (90.0f * AxisValue), 0.0f);
+	GetController()->SetControlRotation(TargetRotator);
+	
 }

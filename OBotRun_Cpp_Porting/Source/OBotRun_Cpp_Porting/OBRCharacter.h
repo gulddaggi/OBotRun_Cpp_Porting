@@ -28,12 +28,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void PossessedBy(AController* NewController) override;
-	
-	void MoveRightOBot(const FInputActionValue& Value);
-
-	void JumpOBot();
-
-	void MoveForward();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
@@ -55,7 +49,19 @@ private:
 	FTimerHandle JumpTimerHandle;
 
 	bool EnableJump;
+	bool EnableTurn;
 	float JumpDelay;
 
 	void SetEnableJump();
+
+	void MoveRightOBot(const FInputActionValue& Value);
+
+	void JumpOBot();
+
+	void MoveForward();
+
+	void Turn(float AxisValue);
+
+public:
+	void SetEnableTurn();
 };

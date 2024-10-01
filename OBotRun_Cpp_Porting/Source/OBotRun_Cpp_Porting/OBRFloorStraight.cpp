@@ -45,12 +45,13 @@ AOBRFloorStraight::AOBRFloorStraight()
 	EnableSpawn = true;
 }
 
-void AOBRFloorStraight::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AOBRFloorStraight::OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AOBRCharacter* OBot = Cast<AOBRCharacter>(OtherActor);
 
 	if (OBot != nullptr)
 	{
 		OnPlayerReachedEndTrigger.Broadcast();
+		GetWorld()->GetTimerManager().SetTimer(DestoryTimerHandle, this, &AOBRFloorStraight::DestroyFloor, 2.0f);
 	}
 }
