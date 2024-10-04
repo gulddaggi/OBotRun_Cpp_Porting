@@ -43,6 +43,10 @@ AOBRFloorStraight::AOBRFloorStraight()
 	EndTrigger->SetRelativeLocation(FVector(155.0f, 0.0f, 350.0f));
 
 	EnableSpawn = true;
+
+	BlockSpawnVectors = { FVector(70.0f, 0.0f, 5.0f), FVector(70.0f, -80.0f, 5.0f), FVector(70.0f, 80.0f, 5.0f) };
+
+	
 }
 
 void AOBRFloorStraight::OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -54,4 +58,9 @@ void AOBRFloorStraight::OnEndTriggerBeginOverlap(UPrimitiveComponent* Overlapped
 		OnPlayerReachedEndTrigger.Broadcast();
 		GetWorld()->GetTimerManager().SetTimer(DestoryTimerHandle, this, &AOBRFloorStraight::DestroyFloor, 2.0f);
 	}
+}
+
+FVector& AOBRFloorStraight::GetBlockSpawnVector(int Index)
+{
+	return BlockSpawnVectors[Index];
 }

@@ -5,6 +5,7 @@
 #include "OBRFloorStraight.h"
 #include "OBRFloorLeftCorner.h"
 #include "OBRFloorRightCorner.h"
+#include "OBRBlock.h"
 
 // Sets default values
 AOBRFloorSpawner::AOBRFloorSpawner()
@@ -40,6 +41,11 @@ void AOBRFloorSpawner::SpawnStraightFloor(int SpawnCount, bool EnableSpawnObs)
 		SpawnPoint = SpawnedFloor->GetNextSpawnTransform();
 		SpawnedFloor->OnPlayerReachedEndTrigger.AddLambda([this]()->void {SpawnStraightFloor(); });
 
+		if (EnableSpawnObs)
+		{
+			SpawnBlock(SpawnedFloor);
+		}
+
 		++StraightFloorCount;
 	}
 }
@@ -64,4 +70,17 @@ void AOBRFloorSpawner::SpawnCurveFloor()
 	}
 
 	StraightFloorCount = 0;
+}
+
+void AOBRFloorSpawner::SpawnBlock(AOBRFloorStraight* SpawnedFloor)
+{
+	int Index = FMath::RandRange(0, 2);
+
+	FVector BlockVector = SpawnedFloor->GetBlockSpawnVector(Index);
+
+	auto SpawnedBlock = GetWorld()->SpawnActor<AOBRBlock>(AOBRBlock::StaticClass(), SpawnedFloor->GetTransform());
+	
+	SpawnedBlock->AttachToActor(SpawnedFloor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	SpawnedBlock->SetActorRelativeLocation(BlockVector);
+	SpawnedBlock->SetActorRelativeScale3D(FVector(0.6f, 0.6f, 2.0f));
 }

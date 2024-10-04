@@ -31,7 +31,13 @@ private:
 
 	void OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
+	TArray<FVector> BlockSpawnVectors;
+
 public:
 	bool EnableSpawn;
+
+	FVector& GetBlockSpawnVector(int Index);
+
+	
 	
 };
