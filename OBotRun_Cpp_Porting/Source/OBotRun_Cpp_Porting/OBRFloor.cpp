@@ -2,6 +2,7 @@
 
 
 #include "OBRFloor.h"
+#include "OBRCharacter.h"
 
 // Sets default values
 AOBRFloor::AOBRFloor()
@@ -52,10 +53,23 @@ FTransform AOBRFloor::GetNextSpawnTransform() const
 
 void AOBRFloor::OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	AOBRCharacter* OBot = Cast<AOBRCharacter>(OtherActor);
 
+	if (OBot != nullptr)
+	{
+		OnPlayerReachedEndTrigger.Broadcast();
+		OnPlayerReachedEndTrigger.Clear();
+		GetWorld()->GetTimerManager().SetTimer(DestoryTimerHandle, this, &AOBRFloor::DestroyFloor, 0.5f);
+	}
 }
 
 void AOBRFloor::DestroyFloor()
 {
+	TArray<AActor*> AttachedActors;
+	GetAttachedActors(AttachedActors);
+	for (auto Act : AttachedActors)
+	{
+		Act->Destroy();
+	}
 	Destroy();
 }

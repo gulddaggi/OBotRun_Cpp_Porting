@@ -29,9 +29,11 @@ public:
 private:
 	void SpawnCurveFloor();
 	void SpawnBlock(class AOBRFloorStraight* SpawnedFloor);
+	void SpawnCoin(class AOBRFloorStraight* SpawnedFloor);
 
 	int StraightFloorCount;
 	int MaxStraightFloorCount;
+	int CoinSpawnCount;
 	FTransform SpawnPoint;
 
 };

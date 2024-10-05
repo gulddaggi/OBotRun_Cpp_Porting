@@ -53,17 +53,6 @@ void AOBRFloorLeftCorner::BeginPlay()
 	TurnZone->OnComponentBeginOverlap.AddDynamic(this, &AOBRFloorLeftCorner::OnTurnZoneBeginOverlap);
 }
 
-void AOBRFloorLeftCorner::OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	auto OBot = Cast<AOBRCharacter>(OtherActor);
-
-	if (OBot != nullptr)
-	{
-		OnPlayerReachedEndTrigger.Broadcast();
-		GetWorld()->GetTimerManager().SetTimer(DestoryTimerHandle, this, &AOBRFloorLeftCorner::DestroyFloor, 2.0f);
-	}
-}
-
 void AOBRFloorLeftCorner::OnTurnZoneBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	auto OBot = Cast<AOBRCharacter>(OtherActor);

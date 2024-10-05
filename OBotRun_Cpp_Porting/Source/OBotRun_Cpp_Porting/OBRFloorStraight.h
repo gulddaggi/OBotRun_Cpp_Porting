@@ -29,15 +29,22 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Mesh)
 	UStaticMeshComponent* WallRU;
 
-	void OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
-
 	TArray<FVector> BlockSpawnVectors;
+	TArray<FVector> CoinSpawnVectors;
+
+	int BlockSpawnedLineNum;
+	int CoinSpawnedLineNum;
+
+	void SetBlockSpawnedLineNum(int Index);
+	void SetCoinSpawnedLineNum(int Index);
 
 public:
 	bool EnableSpawn;
 
 	FVector& GetBlockSpawnVector(int Index);
+	FVector& GetCoinSpawnVector(int Index);
 
+	int GetBlockSpawnedLineNum() const;
 	
 	
 };

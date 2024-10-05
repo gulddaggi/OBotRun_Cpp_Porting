@@ -42,25 +42,37 @@ AOBRFloorStraight::AOBRFloorStraight()
 	NextSpawnPoint->SetRelativeLocation(FVector(125.0f, 0.0f, 0.0f));
 	EndTrigger->SetRelativeLocation(FVector(155.0f, 0.0f, 350.0f));
 
+	// Init Values
 	EnableSpawn = true;
-
-	BlockSpawnVectors = { FVector(70.0f, 0.0f, 5.0f), FVector(70.0f, -80.0f, 5.0f), FVector(70.0f, 80.0f, 5.0f) };
-
-	
-}
-
-void AOBRFloorStraight::OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	AOBRCharacter* OBot = Cast<AOBRCharacter>(OtherActor);
-
-	if (OBot != nullptr)
-	{
-		OnPlayerReachedEndTrigger.Broadcast();
-		GetWorld()->GetTimerManager().SetTimer(DestoryTimerHandle, this, &AOBRFloorStraight::DestroyFloor, 2.0f);
-	}
+	BlockSpawnVectors = { FVector(90.0f, 0.0f, 5.0f), FVector(90.0f, -80.0f, 5.0f), FVector(90.0f, 80.0f, 5.0f) };
+	CoinSpawnVectors = { FVector(-100.0f, 0.0f, 100.0f), FVector(-100.0f, -80.0f, 100.0f), FVector(-100.0f, 80.0f, 100.0f) };
+	BlockSpawnedLineNum = -5;
+	CoinSpawnedLineNum = -5;
 }
 
 FVector& AOBRFloorStraight::GetBlockSpawnVector(int Index)
 {
+	SetBlockSpawnedLineNum(Index);
 	return BlockSpawnVectors[Index];
+}
+
+void AOBRFloorStraight::SetBlockSpawnedLineNum(int Index)
+{
+	BlockSpawnedLineNum = Index;
+}
+
+int AOBRFloorStraight::GetBlockSpawnedLineNum() const
+{
+	return BlockSpawnedLineNum;
+}
+
+FVector& AOBRFloorStraight::GetCoinSpawnVector(int Index)
+{
+	SetCoinSpawnedLineNum(Index);
+	return CoinSpawnVectors[Index];
+}
+
+void AOBRFloorStraight::SetCoinSpawnedLineNum(int Index)
+{
+	CoinSpawnedLineNum = Index;
 }

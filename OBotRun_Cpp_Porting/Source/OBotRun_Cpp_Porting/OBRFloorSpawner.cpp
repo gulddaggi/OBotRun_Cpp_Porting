@@ -6,6 +6,7 @@
 #include "OBRFloorLeftCorner.h"
 #include "OBRFloorRightCorner.h"
 #include "OBRBlock.h"
+#include "OBRCoin.h"
 
 // Sets default values
 AOBRFloorSpawner::AOBRFloorSpawner()
@@ -15,6 +16,7 @@ AOBRFloorSpawner::AOBRFloorSpawner()
 
 	MaxStraightFloorCount = 6;
 	StraightFloorCount = 0;
+	CoinSpawnCount = 5;
 	FTransform InitTransform(FRotator(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	SpawnPoint = InitTransform;
 }
@@ -36,17 +38,20 @@ void AOBRFloorSpawner::SpawnStraightFloor(int SpawnCount, bool EnableSpawnObs)
 	for (int i = 0; i < SpawnCount; i++)
 	{
 		if (StraightFloorCount == MaxStraightFloorCount) SpawnCurveFloor();
-
-		AOBRFloorStraight* SpawnedFloor = GetWorld()->SpawnActor<AOBRFloorStraight>(AOBRFloorStraight::StaticClass(), SpawnPoint);
-		SpawnPoint = SpawnedFloor->GetNextSpawnTransform();
-		SpawnedFloor->OnPlayerReachedEndTrigger.AddLambda([this]()->void {SpawnStraightFloor(); });
-
-		if (EnableSpawnObs)
+		else
 		{
-			SpawnBlock(SpawnedFloor);
-		}
+			AOBRFloorStraight* SpawnedFloor = GetWorld()->SpawnActor<AOBRFloorStraight>(AOBRFloorStraight::StaticClass(), SpawnPoint);
+			SpawnPoint = SpawnedFloor->GetNextSpawnTransform();
+			SpawnedFloor->OnPlayerReachedEndTrigger.AddLambda([this]()-> void { SpawnStraightFloor(1, true); });
 
-		++StraightFloorCount;
+			if (EnableSpawnObs)
+			{
+				SpawnBlock(SpawnedFloor);
+				SpawnCoin(SpawnedFloor);
+			}
+
+			++StraightFloorCount;
+		}
 	}
 }
 
@@ -60,13 +65,13 @@ void AOBRFloorSpawner::SpawnCurveFloor()
 	{
 		AOBRFloorLeftCorner* SpawnedCurveFloor = GetWorld()->SpawnActor<AOBRFloorLeftCorner>(AOBRFloorLeftCorner::StaticClass(), SpawnPoint);
 		SpawnPoint = SpawnedCurveFloor->GetNextSpawnTransform();
-		SpawnedCurveFloor->OnPlayerReachedEndTrigger.AddLambda([this]()->void {SpawnStraightFloor(); });
+		SpawnedCurveFloor->OnPlayerReachedEndTrigger.AddLambda([this]()-> void { SpawnStraightFloor(1, true); });
 	}
 	else
 	{
 		AOBRFloorRightCorner* SpawnedCurveFloor = GetWorld()->SpawnActor<AOBRFloorRightCorner>(AOBRFloorRightCorner::StaticClass(), SpawnPoint);
 		SpawnPoint = SpawnedCurveFloor->GetNextSpawnTransform();
-		SpawnedCurveFloor->OnPlayerReachedEndTrigger.AddLambda([this]()->void {SpawnStraightFloor(); });
+		SpawnedCurveFloor->OnPlayerReachedEndTrigger.AddLambda([this]()-> void { SpawnStraightFloor(1, true); });
 	}
 
 	StraightFloorCount = 0;
@@ -83,4 +88,22 @@ void AOBRFloorSpawner::SpawnBlock(AOBRFloorStraight* SpawnedFloor)
 	SpawnedBlock->AttachToActor(SpawnedFloor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	SpawnedBlock->SetActorRelativeLocation(BlockVector);
 	SpawnedBlock->SetActorRelativeScale3D(FVector(0.6f, 0.6f, 2.0f));
+}
+
+void AOBRFloorSpawner::SpawnCoin(AOBRFloorStraight* SpawnedFloor)
+{
+	int Index = FMath::RandRange(0, 2);
+
+	FVector StartVector = SpawnedFloor->GetCoinSpawnVector(Index);
+	for (int i = 0; i < CoinSpawnCount; i++)
+	{
+		FVector CoinSpawnVector = FVector(StartVector.X + (i * 35.0f), StartVector.Y, StartVector.Z);
+
+		auto SpawnedBlock = GetWorld()->SpawnActor<AOBRCoin>(AOBRCoin::StaticClass(), SpawnedFloor->GetTransform());
+
+		SpawnedBlock->AttachToActor(SpawnedFloor, FAttachmentTransformRules::KeepWorldTransform);
+		SpawnedBlock->SetActorRelativeLocation(CoinSpawnVector);
+		SpawnedBlock->SetActorRelativeScale3D(FVector(0.3f, 0.3f, 1.0f));
+	}
+
 }
