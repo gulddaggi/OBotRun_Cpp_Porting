@@ -20,6 +20,16 @@ public:
 	UPROPERTY()
 	class AOBRFloorSpawner* Spawner;
 
+	void AddScore(int Value);
+
 protected:
 	virtual void BeginPlay() override;
+
+private:
+	TSubclassOf<class UOBRHUDWidget> HUDWidgetClass;
+
+	UPROPERTY()
+	class UOBRHUDWidget* HUDWidget;
+
+	int Score;
 };

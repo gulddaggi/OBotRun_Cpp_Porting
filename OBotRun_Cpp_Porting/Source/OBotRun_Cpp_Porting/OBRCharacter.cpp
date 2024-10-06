@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "OBRMainGameMode.h"
 
 // Sets default values
 AOBRCharacter::AOBRCharacter()
@@ -65,7 +66,9 @@ AOBRCharacter::AOBRCharacter()
 	EnableTurn = false;
 	JumpDelay = 2.5f;
 	GetCharacterMovement()->JumpZVelocity = 900.0f;
-
+	GetCharacterMovement()->AirControl = 0.8f;
+	RunningScore = 10;
+	IsDead = false;
 }
 
 // Called when the game starts or when spawned
@@ -74,13 +77,17 @@ void AOBRCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	MoveForward();
-	GetWorld()->GetTimerManager().SetTimer(MoveForwardTimerHandle, this, &AOBRCharacter::MoveForward, 0.01f, true, 0.01f);
+	GetWorld()->GetTimerManager().SetTimer(MoveForwardTimerHandle, this, &AOBRCharacter::MoveForward, 0.01f, true);
+	GetWorld()->GetTimerManager().SetTimer(AddScoreHandle, this, &AOBRCharacter::AddScore, 0.1f, true);
 }
 
 // Called every frame
 void AOBRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	GetCharacterMovement()->MaxWalkSpeed += (1.0f * GetWorld()->DeltaTimeSeconds);
+
 
 }
 
@@ -137,7 +144,6 @@ void AOBRCharacter::JumpOBot()
 
 void AOBRCharacter::MoveForward()
 {
-	GetCharacterMovement()->MaxWalkSpeed += 0.05f;
 	AddMovementInput(GetActorForwardVector() * 2);
 }
 
@@ -157,4 +163,9 @@ void AOBRCharacter::Turn(float AxisValue)
 	FRotator TargetRotator = GetControlRotation() + FRotator(0.0f, (90.0f * AxisValue), 0.0f);
 	GetController()->SetControlRotation(TargetRotator);
 	
+}
+
+void AOBRCharacter::AddScore()
+{
+	if (!IsDead) Cast<AOBRMainGameMode>(GetWorld()->GetAuthGameMode())->AddScore(RunningScore);
 }

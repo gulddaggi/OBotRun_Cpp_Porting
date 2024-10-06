@@ -3,6 +3,7 @@
 
 #include "OBRCoin.h"
 #include "OBRCharacter.h"
+#include "OBRMainGameMode.h"
 
 // Sets default values
 AOBRCoin::AOBRCoin()
@@ -18,8 +19,12 @@ AOBRCoin::AOBRCoin()
 		Mesh->SetStaticMesh(SM_COIN.Object);
 	}
 
+	SetRootComponent(Mesh);
+
 	Mesh->SetCollisionProfileName(TEXT("OverlapOnlyPawn"));
 	Mesh->SetWorldRotation(FRotator(90.0f, 0.0f, 0.0f));
+
+	CoinValue = 20;
 }
 
 // Called when the game starts or when spawned
@@ -43,6 +48,7 @@ void AOBRCoin::OnCoinBeginoverlap(UPrimitiveComponent* OverlappedComponent, AAct
 
 	if (OBot != nullptr)
 	{
+		Cast<AOBRMainGameMode>(GetWorld()->GetAuthGameMode())->AddScore(CoinValue);
 		Destroy();
 	}
 }

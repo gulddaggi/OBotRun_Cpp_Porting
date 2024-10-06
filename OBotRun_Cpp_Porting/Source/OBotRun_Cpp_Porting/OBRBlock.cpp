@@ -17,6 +17,8 @@ AOBRBlock::AOBRBlock()
 	{
 		Mesh->SetStaticMesh(SM_BLOCK.Object);
 	}
+
+	SetRootComponent(Mesh);
 }
 
 // Called when the game starts or when spawned

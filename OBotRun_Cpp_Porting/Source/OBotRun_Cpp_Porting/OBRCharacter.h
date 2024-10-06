@@ -47,20 +47,20 @@ private:
 
 	FTimerHandle MoveForwardTimerHandle;
 	FTimerHandle JumpTimerHandle;
+	FTimerHandle AddScoreHandle;
 
 	bool EnableJump;
 	bool EnableTurn;
 	float JumpDelay;
+	int RunningScore;
+	bool IsDead;
 
 	void SetEnableJump();
-
 	void MoveRightOBot(const FInputActionValue& Value);
-
 	void JumpOBot();
-
 	void MoveForward();
-
 	void Turn(float AxisValue);
+	void AddScore();
 
 public:
 	void SetEnableTurn();
