@@ -46,6 +46,7 @@ void AOBRFloorSpawner::SpawnStraightFloor(int SpawnCount, bool EnableSpawnObs)
 
 			if (EnableSpawnObs)
 			{
+				SpawnLineArray = { 0, 1, 2 };
 				SpawnBlock(SpawnedFloor);
 				SpawnCoin(SpawnedFloor);
 			}
@@ -79,7 +80,9 @@ void AOBRFloorSpawner::SpawnCurveFloor()
 
 void AOBRFloorSpawner::SpawnBlock(AOBRFloorStraight* SpawnedFloor)
 {
-	int Index = FMath::RandRange(0, 2);
+	int RandomValue = FMath::RandRange(0, SpawnLineArray.Num()-1);
+	int Index = SpawnLineArray[RandomValue];
+	SpawnLineArray.RemoveAt(RandomValue);
 
 	FVector BlockVector = SpawnedFloor->GetBlockSpawnVector(Index);
 
@@ -92,7 +95,8 @@ void AOBRFloorSpawner::SpawnBlock(AOBRFloorStraight* SpawnedFloor)
 
 void AOBRFloorSpawner::SpawnCoin(AOBRFloorStraight* SpawnedFloor)
 {
-	int Index = FMath::RandRange(0, 2);
+	int RandomValue = FMath::RandRange(0, SpawnLineArray.Num() - 1);
+	int Index = SpawnLineArray[RandomValue];
 
 	FVector StartVector = SpawnedFloor->GetCoinSpawnVector(Index);
 	for (int i = 0; i < CoinSpawnCount; i++)

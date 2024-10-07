@@ -35,5 +35,6 @@ private:
 	int MaxStraightFloorCount;
 	int CoinSpawnCount;
 	FTransform SpawnPoint;
+	TArray<int32> SpawnLineArray;
 
 };
