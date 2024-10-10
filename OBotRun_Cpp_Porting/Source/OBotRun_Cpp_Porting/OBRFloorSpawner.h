@@ -30,11 +30,12 @@ private:
 	void SpawnCurveFloor();
 	void SpawnBlock(class AOBRFloorStraight* SpawnedFloor);
 	void SpawnCoin(class AOBRFloorStraight* SpawnedFloor);
+	void SetBlockCountArray();
 
 	int StraightFloorCount;
 	int MaxStraightFloorCount;
 	int CoinSpawnCount;
 	FTransform SpawnPoint;
 	TArray<int32> SpawnLineArray;
-
+	TArray<int32> BlockCountArray;
 };

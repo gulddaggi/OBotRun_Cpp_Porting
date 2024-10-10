@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "OBRMainGameMode.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnDifficultyChanged);
+
 /**
  * 
  */
@@ -22,6 +24,10 @@ public:
 
 	void AddScore(int Value);
 
+	int GetDifficulty();
+
+	FOnDifficultyChanged OnDifficultyChanged;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -32,4 +38,9 @@ private:
 	class UOBRHUDWidget* HUDWidget;
 
 	int Score;
+
+	UPROPERTY(VisibleAnywhere)
+	int Difficulty;
+
+	void CheckDifficulty();
 };

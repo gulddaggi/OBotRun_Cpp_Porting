@@ -18,6 +18,7 @@ AOBRMainGameMode::AOBRMainGameMode()
 	DefaultPawnClass = AOBRCharacter::StaticClass();
 
 	Score = 0;
+	Difficulty = 1;
 }
 
 void AOBRMainGameMode::BeginPlay()
@@ -37,4 +38,31 @@ void AOBRMainGameMode::AddScore(int Value)
 {
 	Score += Value;
 	HUDWidget->UpdateScore(Score);
+
+	if (Difficulty != 3)
+	{
+		CheckDifficulty();
+	}
+}
+
+void AOBRMainGameMode::CheckDifficulty()
+{
+	if (Score >= 10000)
+	{
+		Difficulty = 3;
+		OnDifficultyChanged.Broadcast();
+	}
+	else if (Score >= 5000)
+	{
+		if (Difficulty == 1)
+		{
+			Difficulty = 2;
+			OnDifficultyChanged.Broadcast();
+		}
+	}
+}
+
+int AOBRMainGameMode::GetDifficulty()
+{
+	return Difficulty;
 }

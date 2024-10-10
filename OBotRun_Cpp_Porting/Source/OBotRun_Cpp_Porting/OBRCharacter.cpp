@@ -67,6 +67,8 @@ AOBRCharacter::AOBRCharacter()
 	JumpDelay = 2.5f;
 	GetCharacterMovement()->JumpZVelocity = 900.0f;
 	GetCharacterMovement()->AirControl = 0.8f;
+	GetCharacterMovement()->GroundFriction = 15.0f;
+
 	RunningScore = 10;
 	IsDead = false;
 }
@@ -86,7 +88,7 @@ void AOBRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GetCharacterMovement()->MaxWalkSpeed += (1.0f * GetWorld()->DeltaTimeSeconds);
+	GetCharacterMovement()->MaxWalkSpeed += (5.0f * GetWorld()->DeltaTimeSeconds);
 
 
 }
