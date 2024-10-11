@@ -21,7 +21,7 @@ AOBRFloorSpawner::AOBRFloorSpawner()
 	FTransform InitTransform(FRotator(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	SpawnPoint = InitTransform;
 	SpawnLineArray = { 0, 1, 2 };
-	BlockCountProbArray = { 0.5f, 0.5f };
+	BlockCountProbArray = { 0.3f, 0.7f };
 	EnableThreeBlocksCount = 0;
 	CurrentDifficulty = 1;
 }
@@ -56,7 +56,7 @@ void AOBRFloorSpawner::SpawnStraightFloor(int SpawnCount, bool EnableSpawnObs)
 			SpawnPoint = SpawnedFloor->GetNextSpawnTransform();
 			SpawnedFloor->OnPlayerReachedEndTrigger.AddLambda([this]()-> void { SpawnStraightFloor(1, true); });
 
-			if (EnableSpawnObs)
+			if (EnableSpawnObs && StraightFloorCount != 0)
 			{
 				SpawnLineArray = { 0, 1, 2 };
 				SpawnBlock(SpawnedFloor);

@@ -26,7 +26,7 @@ void AOBRMainGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	Spawner = GetWorld()->SpawnActor<AOBRFloorSpawner>(AOBRFloorSpawner::StaticClass());
-	Spawner->SpawnStraightFloor(6, false);
+	Spawner->SpawnStraightFloor(7, false);
 
 	
 	HUDWidget = CreateWidget<UOBRHUDWidget>(GetWorld(), HUDWidgetClass);
