@@ -21,7 +21,9 @@ AOBRFloorSpawner::AOBRFloorSpawner()
 	FTransform InitTransform(FRotator(0.0f, 0.0f, 0.0f), FVector(0.0f, 0.0f, 0.0f), FVector(1.0f, 1.0f, 1.0f));
 	SpawnPoint = InitTransform;
 	SpawnLineArray = { 0, 1, 2 };
-	BlockCountArray = { 0, 1 };
+	BlockCountProbArray = { 0.5f, 0.5f };
+	EnableThreeBlocksCount = 0;
+	CurrentDifficulty = 1;
 }
 
 // Called when the game starts or when spawned
@@ -90,23 +92,58 @@ void AOBRFloorSpawner::SpawnCurveFloor()
 
 void AOBRFloorSpawner::SpawnBlock(AOBRFloorStraight* SpawnedFloor)
 {
-	int BlockCount = BlockCountArray[FMath::RandRange(0, BlockCountArray.Num()-1)];
+	int BlockCount = 0;
+	if (CurrentDifficulty == 3)
+	{
+		if (EnableThreeBlocksCount != 0)
+		{
+			BlockCountProbArray = { 0.1f, 0.3f, 0.6f };
+			--EnableThreeBlocksCount;
+		}
+		else
+		{
+			BlockCountProbArray = { 0.1f, 0.3f, 0.4f, 0.2f };
+			UE_LOG(LogTemp, Warning, TEXT("Zero"));
+		}
+	}
+
+	float prob = FMath::RandRange(0.0f, 1.0f);
+	UE_LOG(LogTemp, Warning, TEXT("Prob : %f"), prob);
+	for (int i = 0; i < BlockCountProbArray.Num(); i++)
+	{
+		if (prob <= BlockCountProbArray[i])
+		{
+			BlockCount = i;
+			break;
+		}
+		else
+		{
+			prob -= BlockCountProbArray[i];
+		}
+	}
+
+	if (BlockCount == 3) EnableThreeBlocksCount = 10;
 	UE_LOG(LogTemp, Warning, TEXT("BlockCount : %d"), BlockCount);
-	int RandomValue = FMath::RandRange(0, SpawnLineArray.Num()-1);
-	int Index = SpawnLineArray[RandomValue];
-	SpawnLineArray.RemoveAt(RandomValue);
 
-	FVector BlockVector = SpawnedFloor->GetBlockSpawnVector(Index);
+	for (int i = 0; i < BlockCount; i++)
+	{
+		int RandomValue = FMath::RandRange(0, SpawnLineArray.Num() - 1);
+		int Index = SpawnLineArray[RandomValue];
+		SpawnLineArray.RemoveAt(RandomValue);
 
-	auto SpawnedBlock = GetWorld()->SpawnActor<AOBRBlock>(AOBRBlock::StaticClass(), SpawnedFloor->GetTransform());
-	
-	SpawnedBlock->AttachToActor(SpawnedFloor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	SpawnedBlock->SetActorRelativeLocation(BlockVector);
-	SpawnedBlock->SetActorRelativeScale3D(FVector(0.6f, 0.6f, 2.0f));
+		FVector BlockVector = SpawnedFloor->GetBlockSpawnVector(Index);
+		auto SpawnedBlock = GetWorld()->SpawnActor<AOBRBlock>(AOBRBlock::StaticClass(), SpawnedFloor->GetTransform());
+
+		SpawnedBlock->AttachToActor(SpawnedFloor, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		SpawnedBlock->SetActorRelativeLocation(BlockVector);
+		SpawnedBlock->SetActorRelativeScale3D(FVector(0.6f, 0.6f, 2.0f));
+	}
 }
 
 void AOBRFloorSpawner::SpawnCoin(AOBRFloorStraight* SpawnedFloor)
 {
+	if (SpawnLineArray.Num() == 0) return;
+
 	int RandomValue = FMath::RandRange(0, SpawnLineArray.Num() - 1);
 	int Index = SpawnLineArray[RandomValue];
 
@@ -121,7 +158,6 @@ void AOBRFloorSpawner::SpawnCoin(AOBRFloorStraight* SpawnedFloor)
 		SpawnedBlock->SetActorRelativeLocation(CoinSpawnVector);
 		SpawnedBlock->SetActorRelativeScale3D(FVector(0.3f, 0.3f, 1.0f));
 	}
-
 }
 
 void AOBRFloorSpawner::SetBlockCountArray()
@@ -130,17 +166,17 @@ void AOBRFloorSpawner::SetBlockCountArray()
 
 	if (MainGameMode != nullptr)
 	{
-		int Difficulty = MainGameMode->GetDifficulty();
+		CurrentDifficulty = MainGameMode->GetDifficulty();
 
-		switch (Difficulty)
+		switch (CurrentDifficulty)
 		{
 			case 2:
-				BlockCountArray = { 0, 1, 2 };
+				BlockCountProbArray = { 0.1f, 0.5f, 0.4f };
 				UE_LOG(LogTemp, Warning, TEXT("Difficulty 2"));
 				break;
 
 			case 3:
-				BlockCountArray = { 0, 1, 2, 3 };
+				BlockCountProbArray = { 0.1f, 0.3f, 0.4f, 0.2f };
 				UE_LOG(LogTemp, Warning, TEXT("Difficulty 3"));
 				break;
 

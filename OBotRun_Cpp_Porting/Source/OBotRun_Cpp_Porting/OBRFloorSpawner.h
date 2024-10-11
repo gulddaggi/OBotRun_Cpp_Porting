@@ -35,7 +35,9 @@ private:
 	int StraightFloorCount;
 	int MaxStraightFloorCount;
 	int CoinSpawnCount;
+	int EnableThreeBlocksCount;
+	int CurrentDifficulty;
 	FTransform SpawnPoint;
 	TArray<int32> SpawnLineArray;
-	TArray<int32> BlockCountArray;
+	TArray<float> BlockCountProbArray;
 };
