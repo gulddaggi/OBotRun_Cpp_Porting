@@ -59,7 +59,7 @@ void AOBRFloor::OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponen
 	{
 		OnPlayerReachedEndTrigger.Broadcast();
 		OnPlayerReachedEndTrigger.Clear();
-		GetWorld()->GetTimerManager().SetTimer(DestoryTimerHandle, this, &AOBRFloor::DestroyFloor, 0.5f);
+		GetWorld()->GetTimerManager().SetTimer(DestoryTimerHandle, this, &AOBRFloor::DestroyFloor, 1.0f);
 	}
 }
 

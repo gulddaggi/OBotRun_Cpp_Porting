@@ -40,7 +40,7 @@ void AOBRBlock::OnBlockHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 
 		if (FMath::IsNearlyEqual(dotResult, 1.0, 0.01))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("hit"));
+			OBot->Dead();
 		}
 	}
 }

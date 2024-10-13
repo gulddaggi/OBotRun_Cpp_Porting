@@ -17,10 +17,12 @@ AOBRCharacter::AOBRCharacter()
 	// Create Components
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
+	Effect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("EFFECT"));
 
 	// Attachment
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	Camera->SetupAttachment(SpringArm);
+	Effect->SetupAttachment(GetRootComponent());
 
 	// Set Properties
 	SpringArm->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
@@ -28,38 +30,7 @@ AOBRCharacter::AOBRCharacter()
 	Camera->SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));
 	GetCapsuleComponent()->InitCapsuleSize(40.0f, 66.0f);
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -60.0f), FRotator(0.0f, -90.0f, 0.0f));
-	
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_OBOT(TEXT("/Game/StackOBot/Characters/Bot/Mesh/SKM_Bot.SKM_Bot"));
-	if (SK_OBOT.Succeeded())
-	{
-		GetMesh()->SetSkeletalMesh(SK_OBOT.Object);
-	}
-
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext> IM_OBOT(TEXT("/Game/Input/IM_OBot.IM_OBot"));
-	if (IM_OBOT.Succeeded())
-	{
-		Context = IM_OBOT.Object;
-	}
-
-	static ConstructorHelpers::FObjectFinder<UInputAction> IA_MOVERIGHTOBOT(TEXT("/Game/Input/IA_MoveRightOBot.IA_MoveRightOBot"));
-	if (IA_MOVERIGHTOBOT.Succeeded())
-	{
-		MoverightOBotAction = IA_MOVERIGHTOBOT.Object;
-	}
-
-	static ConstructorHelpers::FObjectFinder<UInputAction> IA_JUMPOBOT(TEXT("/Game/Input/IA_JumpOBot.IA_JumpOBot"));
-	if (IA_JUMPOBOT.Succeeded())
-	{
-		JumpOBotAction = IA_JUMPOBOT.Object;
-	}
-
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-
-	static ConstructorHelpers::FClassFinder<UAnimInstance> OBOT_ANIM(TEXT("/Game/Blueprints/ABP_OBot.ABP_OBot_C"));
-	if (OBOT_ANIM.Succeeded())
-	{
-		GetMesh()->SetAnimInstanceClass(OBOT_ANIM.Class);
-	}
 
 	// Init Values
 	EnableJump = true;
@@ -68,6 +39,7 @@ AOBRCharacter::AOBRCharacter()
 	GetCharacterMovement()->JumpZVelocity = 900.0f;
 	GetCharacterMovement()->AirControl = 0.8f;
 	GetCharacterMovement()->GroundFriction = 15.0f;
+	Effect->bAutoActivate = false;
 
 	RunningScore = 10;
 	IsDead = false;
@@ -88,9 +60,8 @@ void AOBRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GetCharacterMovement()->MaxWalkSpeed += (5.0f * GetWorld()->DeltaTimeSeconds);
-
-
+	if (!IsDead) GetCharacterMovement()->MaxWalkSpeed += (5.0f * GetWorld()->DeltaTimeSeconds);
+	if (GetActorLocation().Z <= -100.0f) Dead();
 }
 
 // Called to bind functionality to input
@@ -114,11 +85,7 @@ void AOBRCharacter::PossessedBy(AController* NewController)
 	if (PlayerController != nullptr)
 	{
 		UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-		if (SubSystem != nullptr)
-		{
-			SubSystem->AddMappingContext(Context, 0);
-			UE_LOG(LogTemp, Warning, TEXT("On"));
-		}
+		if (SubSystem != nullptr) SubSystem->AddMappingContext(Context, 0);
 	}
 }
 
@@ -170,4 +137,16 @@ void AOBRCharacter::Turn(float AxisValue)
 void AOBRCharacter::AddScore()
 {
 	if (!IsDead) Cast<AOBRMainGameMode>(GetWorld()->GetAuthGameMode())->AddScore(RunningScore);
+}
+
+void AOBRCharacter::Dead()
+{
+	if (!IsDead)
+	{
+		IsDead = true;
+		Effect->Activate();
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
+		GetMesh()->SetVisibility(false);
+		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	}
 }

@@ -52,6 +52,10 @@ void AOBRFloorRightCorner::BeginPlay()
 	Super::BeginPlay();
 
 	TurnZone->OnComponentBeginOverlap.AddDynamic(this, &AOBRFloorRightCorner::OnTurnZoneBeginOverlap);
+	WallFD->OnComponentHit.AddDynamic(this, &AOBRFloorRightCorner::OnWallHit);
+	WallFU->OnComponentHit.AddDynamic(this, &AOBRFloorRightCorner::OnWallHit);
+	WallLD->OnComponentHit.AddDynamic(this, &AOBRFloorRightCorner::OnWallHit);
+	WallLU->OnComponentHit.AddDynamic(this, &AOBRFloorRightCorner::OnWallHit);
 }
 
 void AOBRFloorRightCorner::OnTurnZoneBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -62,5 +66,21 @@ void AOBRFloorRightCorner::OnTurnZoneBeginOverlap(UPrimitiveComponent* Overlappe
 	{
 		OBot->SetEnableTurn();
 		TurnZone->DestroyComponent();
+	}
+}
+
+void AOBRFloorRightCorner::OnWallHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	auto OBot = Cast<AOBRCharacter>(OtherActor);
+
+	if (OBot != nullptr)
+	{
+		OBot->GetActorForwardVector();
+		double dotResult = FVector::DotProduct(OBot->GetActorForwardVector(), Hit.ImpactNormal);
+
+		if (FMath::IsNearlyEqual(dotResult, 1.0, 0.01))
+		{
+			OBot->Dead();
+		}
 	}
 }

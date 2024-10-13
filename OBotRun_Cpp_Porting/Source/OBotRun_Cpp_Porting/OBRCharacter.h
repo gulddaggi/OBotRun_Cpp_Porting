@@ -29,6 +29,21 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Input)
+	class UInputMappingContext* Context;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Input)
+	class UInputAction* MoverightOBotAction;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Input)
+	class UInputAction* JumpOBotAction;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Effect)
+	UParticleSystemComponent* Effect;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Sound)
+	USoundBase* Sound;
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	USpringArmComponent* SpringArm;
@@ -36,14 +51,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere, Category = Input)
-	class UInputMappingContext* Context;
 
-	UPROPERTY(VisibleAnywhere, Category = Input)
-	class UInputAction* MoverightOBotAction;
-
-	UPROPERTY(VisibleAnywhere, Category = Input)
-	class UInputAction* JumpOBotAction;
 
 	FTimerHandle MoveForwardTimerHandle;
 	FTimerHandle JumpTimerHandle;
@@ -64,4 +72,5 @@ private:
 
 public:
 	void SetEnableTurn();
+	void Dead();
 };
