@@ -22,7 +22,14 @@ public:
 	UPROPERTY()
 	class AOBRFloorSpawner* Spawner;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class UOBRHUDWidget> HUDWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	TSubclassOf<class UOBRGameOverWidget> GameOverWidgetClass;
+
 	void AddScore(int Value);
+	void GameOver();
 
 	int GetDifficulty();
 
@@ -32,15 +39,13 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	TSubclassOf<class UOBRHUDWidget> HUDWidgetClass;
-
-	UPROPERTY()
-	class UOBRHUDWidget* HUDWidget;
-
-	int Score;
+	UOBRHUDWidget* HUDWidget;
+	UOBRGameOverWidget* GameOverWidget;
 
 	UPROPERTY(VisibleAnywhere)
 	int Difficulty;
 
+	int Score;
 	void CheckDifficulty();
+
 };

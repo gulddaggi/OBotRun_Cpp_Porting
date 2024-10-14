@@ -5,18 +5,10 @@
 #include "OBRCharacter.h"
 #include "OBRFloorSpawner.h"
 #include "OBRHUDWidget.h"
+#include "OBRGameOverWidget.h"
 
 AOBRMainGameMode::AOBRMainGameMode()
 {
-	static ConstructorHelpers::FClassFinder<UOBRHUDWidget> UI_HUD_C(TEXT("/Game/UI/UI_HUD.UI_HUD_C"));
-
-	if (UI_HUD_C.Succeeded())
-	{
-		HUDWidgetClass = UI_HUD_C.Class;
-	}
-
-	DefaultPawnClass = AOBRCharacter::StaticClass();
-
 	Score = 0;
 	Difficulty = 1;
 }
@@ -28,7 +20,6 @@ void AOBRMainGameMode::BeginPlay()
 	Spawner = GetWorld()->SpawnActor<AOBRFloorSpawner>(AOBRFloorSpawner::StaticClass());
 	Spawner->SpawnStraightFloor(7, false);
 
-	
 	HUDWidget = CreateWidget<UOBRHUDWidget>(GetWorld(), HUDWidgetClass);
 	HUDWidget->AddToViewport();
 	HUDWidget->UpdateScore(Score);
@@ -65,4 +56,12 @@ void AOBRMainGameMode::CheckDifficulty()
 int AOBRMainGameMode::GetDifficulty()
 {
 	return Difficulty;
+}
+
+void AOBRMainGameMode::GameOver()
+{
+	GameOverWidget = CreateWidget<UOBRGameOverWidget>(GetWorld(), GameOverWidgetClass);
+	GameOverWidget->AddToViewport();
+	GameOverWidget->SetScore(Score);
+	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 }

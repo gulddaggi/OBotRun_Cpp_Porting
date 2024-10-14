@@ -43,6 +43,7 @@ AOBRCharacter::AOBRCharacter()
 
 	RunningScore = 10;
 	IsDead = false;
+	MainGameMode = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +54,7 @@ void AOBRCharacter::BeginPlay()
 	MoveForward();
 	GetWorld()->GetTimerManager().SetTimer(MoveForwardTimerHandle, this, &AOBRCharacter::MoveForward, 0.01f, true);
 	GetWorld()->GetTimerManager().SetTimer(AddScoreHandle, this, &AOBRCharacter::AddScore, 0.1f, true);
+	MainGameMode = Cast<AOBRMainGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame
@@ -107,7 +109,7 @@ void AOBRCharacter::JumpOBot()
 	{
 		Jump();
 		EnableJump = false;
-		GetWorld()->GetTimerManager().SetTimer(JumpTimerHandle, this, &AOBRCharacter::SetEnableJump, JumpDelay, false, JumpDelay);
+		GetWorld()->GetTimerManager().SetTimer(JumpTimerHandle, this, &AOBRCharacter::SetEnableJump, JumpDelay, false);
 	}
 }
 
@@ -136,7 +138,7 @@ void AOBRCharacter::Turn(float AxisValue)
 
 void AOBRCharacter::AddScore()
 {
-	if (!IsDead) Cast<AOBRMainGameMode>(GetWorld()->GetAuthGameMode())->AddScore(RunningScore);
+	if (!IsDead) MainGameMode->AddScore(RunningScore);
 }
 
 void AOBRCharacter::Dead()
@@ -148,5 +150,7 @@ void AOBRCharacter::Dead()
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
 		GetMesh()->SetVisibility(false);
 		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+		GetWorld()->GetTimerManager().SetTimer(GameOverTimerHandle, MainGameMode, &AOBRMainGameMode::GameOver, 2.0f, false);
 	}
 }

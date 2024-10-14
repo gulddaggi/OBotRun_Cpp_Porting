@@ -51,11 +51,12 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UCameraComponent* Camera;
 
-
+	class AOBRMainGameMode* MainGameMode;
 
 	FTimerHandle MoveForwardTimerHandle;
 	FTimerHandle JumpTimerHandle;
 	FTimerHandle AddScoreHandle;
+	FTimerHandle GameOverTimerHandle;
 
 	bool EnableJump;
 	bool EnableTurn;
