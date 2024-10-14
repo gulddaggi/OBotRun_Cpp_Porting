@@ -30,6 +30,7 @@ private:
 	void SpawnCurveFloor();
 	void SpawnBlock(class AOBRFloorStraight* SpawnedFloor);
 	void SpawnCoin(class AOBRFloorStraight* SpawnedFloor);
+	void SpawnShield(class AOBRFloorStraight* SpawnedFloor);
 	void SetBlockCountArray();
 
 	int StraightFloorCount;
@@ -37,6 +38,7 @@ private:
 	int CoinSpawnCount;
 	int EnableThreeBlocksCount;
 	int CurrentDifficulty;
+	int ShieldSpawnRemainCount;
 	FTransform SpawnPoint;
 	TArray<int32> SpawnLineArray;
 	TArray<float> BlockCountProbArray;

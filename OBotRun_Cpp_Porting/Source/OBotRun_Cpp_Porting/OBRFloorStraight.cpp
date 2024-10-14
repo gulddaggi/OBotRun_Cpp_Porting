@@ -48,6 +48,7 @@ AOBRFloorStraight::AOBRFloorStraight()
 	CoinSpawnVectors = { FVector(-100.0f, 0.0f, 100.0f), FVector(-100.0f, -80.0f, 100.0f), FVector(-100.0f, 80.0f, 100.0f) };
 	BlockSpawnedLineNum = -5;
 	CoinSpawnedLineNum = -5;
+	ShieldSpawnVector = FVector(0.0f, 0.0f, 130.0f);
 }
 
 FVector& AOBRFloorStraight::GetBlockSpawnVector(int Index)
@@ -75,4 +76,9 @@ FVector& AOBRFloorStraight::GetCoinSpawnVector(int Index)
 void AOBRFloorStraight::SetCoinSpawnedLineNum(int Index)
 {
 	CoinSpawnedLineNum = Index;
+}
+
+FVector& AOBRFloorStraight::GetShieldSpawnVector()
+{
+	return ShieldSpawnVector;
 }

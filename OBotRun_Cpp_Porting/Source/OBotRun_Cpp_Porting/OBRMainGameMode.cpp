@@ -65,3 +65,13 @@ void AOBRMainGameMode::GameOver()
 	GameOverWidget->SetScore(Score);
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 }
+
+void AOBRMainGameMode::ActivateShield()
+{
+	HUDWidget->SetShieldImageVisibility(true);
+}
+
+void AOBRMainGameMode::DeactivateShield()
+{
+	HUDWidget->SetShieldImageVisibility(false);
+}

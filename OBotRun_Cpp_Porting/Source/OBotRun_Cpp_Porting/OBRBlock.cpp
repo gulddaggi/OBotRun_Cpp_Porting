@@ -40,7 +40,10 @@ void AOBRBlock::OnBlockHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 
 		if (FMath::IsNearlyEqual(dotResult, 1.0, 0.01))
 		{
-			OBot->Dead();
+			if (!OBot->Dead())
+			{
+				Destroy();
+			}
 		}
 	}
 }

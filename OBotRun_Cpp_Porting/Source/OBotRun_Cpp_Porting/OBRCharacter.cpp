@@ -44,6 +44,7 @@ AOBRCharacter::AOBRCharacter()
 	RunningScore = 10;
 	IsDead = false;
 	MainGameMode = nullptr;
+	EnableShield = false;
 }
 
 // Called when the game starts or when spawned
@@ -143,8 +144,15 @@ void AOBRCharacter::AddScore()
 	if (!IsDead) MainGameMode->AddScore(RunningScore);
 }
 
-void AOBRCharacter::Dead()
+bool AOBRCharacter::Dead()
 {
+	if (EnableShield)
+	{
+		EnableShield = false;
+		MainGameMode->DeactivateShield();
+		return false;
+	}
+
 	if (!IsDead)
 	{
 		IsDead = true;
@@ -155,4 +163,11 @@ void AOBRCharacter::Dead()
 
 		GetWorld()->GetTimerManager().SetTimer(GameOverTimerHandle, MainGameMode, &AOBRMainGameMode::GameOver, 2.0f, false);
 	}
+
+	return true;
+}
+
+void AOBRCharacter::SetEnableShield(bool Value)
+{
+	EnableShield = Value;
 }

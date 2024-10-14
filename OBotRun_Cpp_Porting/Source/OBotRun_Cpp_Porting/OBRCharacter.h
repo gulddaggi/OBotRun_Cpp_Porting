@@ -63,6 +63,7 @@ private:
 	float JumpDelay;
 	int RunningScore;
 	bool IsDead;
+	bool EnableShield;
 
 	void SetEnableJump();
 	void MoveRightOBot(const FInputActionValue& Value);
@@ -73,5 +74,6 @@ private:
 
 public:
 	void SetEnableTurn();
-	void Dead();
+	bool Dead();
+	void SetEnableShield(bool Value);
 };

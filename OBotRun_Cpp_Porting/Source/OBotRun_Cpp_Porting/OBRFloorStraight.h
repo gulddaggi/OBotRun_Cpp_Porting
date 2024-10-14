@@ -32,6 +32,8 @@ private:
 	TArray<FVector> BlockSpawnVectors;
 	TArray<FVector> CoinSpawnVectors;
 
+	FVector ShieldSpawnVector;
+
 	int BlockSpawnedLineNum;
 	int CoinSpawnedLineNum;
 
@@ -43,6 +45,7 @@ public:
 
 	FVector& GetBlockSpawnVector(int Index);
 	FVector& GetCoinSpawnVector(int Index);
+	FVector& GetShieldSpawnVector();
 
 	int GetBlockSpawnedLineNum() const;
 	

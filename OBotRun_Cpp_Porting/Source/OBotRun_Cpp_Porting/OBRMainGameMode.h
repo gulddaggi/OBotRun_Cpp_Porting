@@ -30,6 +30,8 @@ public:
 
 	void AddScore(int Value);
 	void GameOver();
+	void ActivateShield();
+	void DeactivateShield();
 
 	int GetDifficulty();
 

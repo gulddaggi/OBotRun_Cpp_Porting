@@ -8,6 +8,7 @@
 #include "OBRBlock.h"
 #include "OBRCoin.h"
 #include "OBRMainGameMode.h"
+#include "OBRShield.h"
 
 // Sets default values
 AOBRFloorSpawner::AOBRFloorSpawner()
@@ -24,6 +25,7 @@ AOBRFloorSpawner::AOBRFloorSpawner()
 	BlockCountProbArray = { 0.3f, 0.7f };
 	EnableThreeBlocksCount = 0;
 	CurrentDifficulty = 1;
+	ShieldSpawnRemainCount = 10;
 }
 
 // Called when the game starts or when spawned
@@ -61,9 +63,13 @@ void AOBRFloorSpawner::SpawnStraightFloor(int SpawnCount, bool EnableSpawnObs)
 				SpawnLineArray = { 0, 1, 2 };
 				SpawnBlock(SpawnedFloor);
 				SpawnCoin(SpawnedFloor);
+				if (ShieldSpawnRemainCount == 0) SpawnShield(SpawnedFloor);
+				else --ShieldSpawnRemainCount;
+
 			}
 
 			++StraightFloorCount;
+			UE_LOG(LogTemp, Warning, TEXT("Count : %d"), ShieldSpawnRemainCount);
 		}
 	}
 }
@@ -103,12 +109,10 @@ void AOBRFloorSpawner::SpawnBlock(AOBRFloorStraight* SpawnedFloor)
 		else
 		{
 			BlockCountProbArray = { 0.1f, 0.3f, 0.4f, 0.2f };
-			UE_LOG(LogTemp, Warning, TEXT("Zero"));
 		}
 	}
 
 	float prob = FMath::RandRange(0.0f, 1.0f);
-	UE_LOG(LogTemp, Warning, TEXT("Prob : %f"), prob);
 	for (int i = 0; i < BlockCountProbArray.Num(); i++)
 	{
 		if (prob <= BlockCountProbArray[i])
@@ -123,7 +127,6 @@ void AOBRFloorSpawner::SpawnBlock(AOBRFloorStraight* SpawnedFloor)
 	}
 
 	if (BlockCount == 3) EnableThreeBlocksCount = 10;
-	UE_LOG(LogTemp, Warning, TEXT("BlockCount : %d"), BlockCount);
 
 	for (int i = 0; i < BlockCount; i++)
 	{
@@ -172,12 +175,10 @@ void AOBRFloorSpawner::SetBlockCountArray()
 		{
 			case 2:
 				BlockCountProbArray = { 0.1f, 0.5f, 0.4f };
-				UE_LOG(LogTemp, Warning, TEXT("Difficulty 2"));
 				break;
 
 			case 3:
 				BlockCountProbArray = { 0.1f, 0.3f, 0.4f, 0.2f };
-				UE_LOG(LogTemp, Warning, TEXT("Difficulty 3"));
 				break;
 
 			default:
@@ -185,4 +186,17 @@ void AOBRFloorSpawner::SetBlockCountArray()
 		}
 	}
 
+}
+
+void AOBRFloorSpawner::SpawnShield(class AOBRFloorStraight* SpawnedFloor)
+{
+	ShieldSpawnRemainCount = FMath::RandRange(7, 10);
+
+	FVector ShieldVector = SpawnedFloor->GetShieldSpawnVector();
+	auto SpawnedShield = GetWorld()->SpawnActor<AOBRShield>(AOBRShield::StaticClass(), SpawnedFloor->GetTransform());
+
+	SpawnedShield->AttachToActor(SpawnedFloor, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	SpawnedShield->SetActorRelativeLocation(ShieldVector);
+	SpawnedShield->SetActorRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	SpawnedShield->SetActorRelativeScale3D(FVector(1.5f, 1.5f, 4.5f));
 }
