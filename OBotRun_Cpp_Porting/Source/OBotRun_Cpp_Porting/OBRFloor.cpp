@@ -3,6 +3,7 @@
 
 #include "OBRFloor.h"
 #include "OBRCharacter.h"
+#include "OBRTitleCharacter.h"
 
 // Sets default values
 AOBRFloor::AOBRFloor()
@@ -54,8 +55,9 @@ FTransform AOBRFloor::GetNextSpawnTransform() const
 void AOBRFloor::OnEndTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AOBRCharacter* OBot = Cast<AOBRCharacter>(OtherActor);
+	AOBRTitleCharacter* TitleOBot = Cast<AOBRTitleCharacter>(OtherActor);
 
-	if (OBot != nullptr)
+	if (OBot != nullptr || TitleOBot != nullptr)
 	{
 		OnPlayerReachedEndTrigger.Broadcast();
 		OnPlayerReachedEndTrigger.Clear();

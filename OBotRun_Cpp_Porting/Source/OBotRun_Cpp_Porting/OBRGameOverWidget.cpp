@@ -21,10 +21,10 @@ void UOBRGameOverWidget::SetScore(int Value)
 
 void UOBRGameOverWidget::OnRestartButtonClicked()
 {
-
+	UGameplayStatics::OpenLevel(GetWorld(), "MainGame");
 }
 
 void UOBRGameOverWidget::OnQuitButtonClicked()
 {
-
+	UKismetSystemLibrary::QuitGame(this, 0, EQuitPreference::Quit, false);
 }

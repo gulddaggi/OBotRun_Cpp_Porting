@@ -54,7 +54,9 @@ void AOBRCharacter::BeginPlay()
 	MoveForward();
 	GetWorld()->GetTimerManager().SetTimer(MoveForwardTimerHandle, this, &AOBRCharacter::MoveForward, 0.01f, true);
 	GetWorld()->GetTimerManager().SetTimer(AddScoreHandle, this, &AOBRCharacter::AddScore, 0.1f, true);
+
 	MainGameMode = Cast<AOBRMainGameMode>(GetWorld()->GetAuthGameMode());
+	
 }
 
 // Called every frame
