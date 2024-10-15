@@ -29,20 +29,26 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Input)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	class UInputMappingContext* Context;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Input)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	class UInputAction* MoverightOBotAction;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Input)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Input)
 	class UInputAction* JumpOBotAction;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Effect)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Effect)
 	UParticleSystemComponent* Effect;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Sound)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Sound)
 	USoundBase* Sound;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Timeline)
+	class UTimelineComponent* TurnTimeline;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Timeline)
+	class UCurveFloat* TurnTimelineCurve;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
@@ -58,6 +64,8 @@ private:
 	FTimerHandle AddScoreHandle;
 	FTimerHandle GameOverTimerHandle;
 
+
+
 	bool EnableJump;
 	bool EnableTurn;
 	float JumpDelay;
@@ -71,6 +79,10 @@ private:
 	void MoveForward();
 	void Turn(float AxisValue);
 	void AddScore();
+
+	UFUNCTION()
+	void SmoothTurn(float Alpha);
+	FRotator TargetRotator;
 
 public:
 	void SetEnableTurn();

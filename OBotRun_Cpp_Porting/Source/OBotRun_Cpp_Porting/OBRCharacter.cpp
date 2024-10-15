@@ -7,6 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "OBRMainGameMode.h"
+#include "Components/TimelineComponent.h"
 
 // Sets default values
 AOBRCharacter::AOBRCharacter()
@@ -18,6 +19,7 @@ AOBRCharacter::AOBRCharacter()
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	Effect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("EFFECT"));
+	TurnTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("TIMELINE"));
 
 	// Attachment
 	SpringArm->SetupAttachment(GetCapsuleComponent());
@@ -57,7 +59,11 @@ void AOBRCharacter::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(AddScoreHandle, this, &AOBRCharacter::AddScore, 0.1f, true);
 
 	MainGameMode = Cast<AOBRMainGameMode>(GetWorld()->GetAuthGameMode());
-	
+
+	FOnTimelineFloat TimelineUpdate;
+	TimelineUpdate.BindDynamic(this, &AOBRCharacter::SmoothTurn);
+	TurnTimeline->AddInterpFloat(TurnTimelineCurve, TimelineUpdate);
+	TurnTimeline->SetLooping(false);
 }
 
 // Called every frame
@@ -133,9 +139,11 @@ void AOBRCharacter::SetEnableTurn()
 
 void AOBRCharacter::Turn(float AxisValue)
 {
+
 	EnableTurn = false;
-	FRotator TargetRotator = GetControlRotation() + FRotator(0.0f, (90.0f * AxisValue), 0.0f);
-	GetController()->SetControlRotation(TargetRotator);
+	TargetRotator = GetControlRotation() + FRotator(0.0f, (90.0f * AxisValue), 0.0f);
+	TurnTimeline->PlayFromStart();
+	//GetController()->SetControlRotation(TargetRotator);
 	
 }
 
@@ -170,4 +178,10 @@ bool AOBRCharacter::Dead()
 void AOBRCharacter::SetEnableShield(bool Value)
 {
 	EnableShield = Value;
+}
+
+void AOBRCharacter::SmoothTurn(float Alpha)
+{
+	FRotator TurnRotator = FMath::RInterpTo(GetControlRotation(), TargetRotator, Alpha, 1.0f);
+	GetController()->SetControlRotation(TurnRotator);
 }
