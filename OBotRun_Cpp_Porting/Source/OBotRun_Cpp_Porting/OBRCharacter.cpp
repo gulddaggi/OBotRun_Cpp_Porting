@@ -18,13 +18,15 @@ AOBRCharacter::AOBRCharacter()
 	// Create Components
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
-	Effect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("EFFECT"));
+	DeadEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DEADEFFECT"));
+	ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SHIELDEFFECT"));
 	TurnTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("TIMELINE"));
 
 	// Attachment
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	Camera->SetupAttachment(SpringArm);
-	Effect->SetupAttachment(GetRootComponent());
+	DeadEffect->SetupAttachment(GetRootComponent());
+	ShieldEffect->SetupAttachment(GetRootComponent());
 
 	// Set Properties
 	SpringArm->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
@@ -41,7 +43,8 @@ AOBRCharacter::AOBRCharacter()
 	GetCharacterMovement()->JumpZVelocity = 900.0f;
 	GetCharacterMovement()->AirControl = 0.8f;
 	GetCharacterMovement()->GroundFriction = 15.0f;
-	Effect->bAutoActivate = false;
+	DeadEffect->bAutoActivate = false;
+	ShieldEffect->bAutoActivate = false;
 
 	RunningScore = 10;
 	IsDead = false;
@@ -139,12 +142,9 @@ void AOBRCharacter::SetEnableTurn()
 
 void AOBRCharacter::Turn(float AxisValue)
 {
-
 	EnableTurn = false;
 	TargetRotator = GetControlRotation() + FRotator(0.0f, (90.0f * AxisValue), 0.0f);
 	TurnTimeline->PlayFromStart();
-	//GetController()->SetControlRotation(TargetRotator);
-	
 }
 
 void AOBRCharacter::AddScore()
@@ -157,6 +157,8 @@ bool AOBRCharacter::Dead()
 	if (EnableShield)
 	{
 		EnableShield = false;
+		ShieldEffect->Activate();
+		GetWorld()->GetTimerManager().SetTimer(ShieldEffectTimerHandle, this, &AOBRCharacter::DeactivateShieldEffect, 1.0f, false);
 		MainGameMode->DeactivateShield();
 		return false;
 	}
@@ -164,11 +166,10 @@ bool AOBRCharacter::Dead()
 	if (!IsDead)
 	{
 		IsDead = true;
-		Effect->Activate();
+		DeadEffect->Activate();
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
 		GetMesh()->SetVisibility(false);
 		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-
 		GetWorld()->GetTimerManager().SetTimer(GameOverTimerHandle, MainGameMode, &AOBRMainGameMode::GameOver, 2.0f, false);
 	}
 
@@ -184,4 +185,14 @@ void AOBRCharacter::SmoothTurn(float Alpha)
 {
 	FRotator TurnRotator = FMath::RInterpTo(GetControlRotation(), TargetRotator, Alpha, 1.0f);
 	GetController()->SetControlRotation(TurnRotator);
+}
+
+void AOBRCharacter::UseShield(float MultAxisValue)
+{
+	Turn(MultAxisValue);
+}
+
+void AOBRCharacter::DeactivateShieldEffect()
+{
+	ShieldEffect->Deactivate();
 }

@@ -69,7 +69,6 @@ void AOBRFloorSpawner::SpawnStraightFloor(int SpawnCount, bool EnableSpawnObs)
 			}
 
 			++StraightFloorCount;
-			UE_LOG(LogTemp, Warning, TEXT("Count : %d"), ShieldSpawnRemainCount);
 		}
 	}
 }

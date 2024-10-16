@@ -51,10 +51,10 @@ void AOBRFloorLeftCorner::BeginPlay()
 	Super::BeginPlay();
 
 	TurnZone->OnComponentBeginOverlap.AddDynamic(this, &AOBRFloorLeftCorner::OnTurnZoneBeginOverlap);
-	WallFD->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnWallHit);
-	WallFU->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnWallHit);
-	WallRD->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnWallHit);
-	WallRU->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnWallHit);
+	WallFD->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnForwardWallHit);
+	WallFU->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnForwardWallHit);
+	WallRD->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnSideWallHit);
+	WallRU->OnComponentHit.AddDynamic(this, &AOBRFloorLeftCorner::OnSideWallHit);
 }
 
 void AOBRFloorLeftCorner::OnTurnZoneBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -68,7 +68,7 @@ void AOBRFloorLeftCorner::OnTurnZoneBeginOverlap(UPrimitiveComponent* Overlapped
 	}
 }
 
-void AOBRFloorLeftCorner::OnWallHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AOBRFloorLeftCorner::OnForwardWallHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	auto OBot = Cast<AOBRCharacter>(OtherActor);
 
@@ -79,7 +79,37 @@ void AOBRFloorLeftCorner::OnWallHit(UPrimitiveComponent* HitComp, AActor* OtherA
 
 		if (FMath::IsNearlyEqual(dotResult, 1.0, 0.01))
 		{
-			OBot->Dead();
+			if (!OBot->Dead())
+			{
+				if (TurnZone != nullptr) TurnZone->DestroyComponent();
+				HitComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+				OBot->AddActorLocalOffset(FVector(-300.0f, 0.0f, 0.0f));
+				OBot->UseShield(-1.0f);
+			}
+		}
+	}
+}
+
+void AOBRFloorLeftCorner::OnSideWallHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	auto OBot = Cast<AOBRCharacter>(OtherActor);
+
+	if (OBot != nullptr)
+	{
+		OBot->GetActorForwardVector();
+		double dotResult = FVector::DotProduct(OBot->GetActorForwardVector(), Hit.ImpactNormal);
+
+		if (FMath::IsNearlyEqual(dotResult, 1.0, 0.01))
+		{
+			if (!OBot->Dead())
+			{
+				if (TurnZone != nullptr) TurnZone->DestroyComponent();
+				HitComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+				OBot->AddActorLocalOffset(FVector(-300.0f, 0.0f, 0.0f));
+				OBot->UseShield(-2.0f);
+			}
 		}
 	}
 }

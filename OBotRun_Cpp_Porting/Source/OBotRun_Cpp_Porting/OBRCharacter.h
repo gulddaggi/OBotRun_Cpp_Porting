@@ -39,7 +39,10 @@ public:
 	class UInputAction* JumpOBotAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Effect)
-	UParticleSystemComponent* Effect;
+	UParticleSystemComponent* DeadEffect;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Effect)
+	UParticleSystemComponent* ShieldEffect;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Sound)
 	USoundBase* Sound;
@@ -63,8 +66,7 @@ private:
 	FTimerHandle JumpTimerHandle;
 	FTimerHandle AddScoreHandle;
 	FTimerHandle GameOverTimerHandle;
-
-
+	FTimerHandle ShieldEffectTimerHandle;
 
 	bool EnableJump;
 	bool EnableTurn;
@@ -79,6 +81,7 @@ private:
 	void MoveForward();
 	void Turn(float AxisValue);
 	void AddScore();
+	void DeactivateShieldEffect();
 
 	UFUNCTION()
 	void SmoothTurn(float Alpha);
@@ -88,4 +91,5 @@ public:
 	void SetEnableTurn();
 	bool Dead();
 	void SetEnableShield(bool Value);
+	void UseShield(float multAxisValue);
 };
