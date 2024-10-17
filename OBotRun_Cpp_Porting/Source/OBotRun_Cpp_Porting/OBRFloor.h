@@ -15,17 +15,15 @@ class OBOTRUN_CPP_PORTING_API AOBRFloor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AOBRFloor();
 
 	FTransform GetNextSpawnTransform() const;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
 	UStaticMeshComponent* FloorMesh;
+
+protected:
+	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, Category = Trigger)
 	UBoxComponent* EndTrigger;
@@ -41,9 +39,5 @@ protected:
 	void DestroyFloor();
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	FOnPlayerReachedEndTrigger OnPlayerReachedEndTrigger;
-
 };

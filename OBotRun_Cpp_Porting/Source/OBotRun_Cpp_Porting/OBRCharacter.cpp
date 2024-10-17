@@ -12,23 +12,19 @@
 // Sets default values
 AOBRCharacter::AOBRCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Create Components
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	DeadEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DEADEFFECT"));
 	ShieldEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("SHIELDEFFECT"));
 	TurnTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("TIMELINE"));
 
-	// Attachment
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	Camera->SetupAttachment(SpringArm);
 	DeadEffect->SetupAttachment(GetRootComponent());
 	ShieldEffect->SetupAttachment(GetRootComponent());
 
-	// Set Properties
 	SpringArm->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
 	SpringArm->TargetArmLength = 350.0f;
 	Camera->SetRelativeRotation(FRotator(-30.0f, 0.0f, 0.0f));
@@ -36,7 +32,6 @@ AOBRCharacter::AOBRCharacter()
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -60.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
-	// Init Values
 	EnableJump = true;
 	EnableTurn = false;
 	JumpDelay = 2.5f;
@@ -45,19 +40,16 @@ AOBRCharacter::AOBRCharacter()
 	GetCharacterMovement()->GroundFriction = 15.0f;
 	DeadEffect->bAutoActivate = false;
 	ShieldEffect->bAutoActivate = false;
-
 	RunningScore = 10;
 	IsDead = false;
 	MainGameMode = nullptr;
 	EnableShield = false;
 }
 
-// Called when the game starts or when spawned
 void AOBRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MoveForward();
 	GetWorld()->GetTimerManager().SetTimer(MoveForwardTimerHandle, this, &AOBRCharacter::MoveForward, 0.01f, true);
 	GetWorld()->GetTimerManager().SetTimer(AddScoreHandle, this, &AOBRCharacter::AddScore, 0.1f, true);
 
@@ -69,7 +61,6 @@ void AOBRCharacter::BeginPlay()
 	TurnTimeline->SetLooping(false);
 }
 
-// Called every frame
 void AOBRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -78,7 +69,6 @@ void AOBRCharacter::Tick(float DeltaTime)
 	if (GetActorLocation().Z <= -100.0f) Dead();
 }
 
-// Called to bind functionality to input
 void AOBRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -105,14 +95,8 @@ void AOBRCharacter::PossessedBy(AController* NewController)
 
 void AOBRCharacter::MoveRightOBot(const FInputActionValue& Value)
 {
-	if (EnableTurn)
-	{
-		Turn(Value.Get<float>());
-	}
-	else
-	{
-		AddMovementInput(GetActorRightVector() * 2.0f, Value.Get<float>());
-	}
+	if (EnableTurn) Turn(Value.Get<float>());
+	else AddMovementInput(GetActorRightVector() * 2.0f, Value.Get<float>());
 }
 
 void AOBRCharacter::JumpOBot()
@@ -158,7 +142,7 @@ bool AOBRCharacter::Dead()
 	{
 		EnableShield = false;
 		ShieldEffect->Activate();
-		GetWorld()->GetTimerManager().SetTimer(ShieldEffectTimerHandle, this, &AOBRCharacter::DeactivateShieldEffect, 1.0f, false);
+		GetWorld()->GetTimerManager().SetTimer(ShieldEffectTimerHandle, this, &AOBRCharacter::DeactivateShieldEffect, 0.5f, false);
 		MainGameMode->DeactivateShield();
 		return false;
 	}
@@ -170,7 +154,7 @@ bool AOBRCharacter::Dead()
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
 		GetMesh()->SetVisibility(false);
 		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-		GetWorld()->GetTimerManager().SetTimer(GameOverTimerHandle, MainGameMode, &AOBRMainGameMode::GameOver, 2.0f, false);
+		GetWorld()->GetTimerManager().SetTimer(GameOverTimerHandle, MainGameMode, &AOBRMainGameMode::GameOver, 1.5f, false);
 	}
 
 	return true;

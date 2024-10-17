@@ -22,10 +22,10 @@ public:
 	void SetShieldImageVisibility(bool Value);
 
 private:
-	UPROPERTY()
+	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ScoreText;
 
-	UPROPERTY()
+	UPROPERTY(meta = (BindWidget))
 	class UImage* ShieldImage;
 
 	bool EnableShieldImageVisibility;

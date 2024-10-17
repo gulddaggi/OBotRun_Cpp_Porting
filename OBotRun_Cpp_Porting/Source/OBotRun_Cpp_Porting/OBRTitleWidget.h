@@ -17,11 +17,11 @@ class OBOTRUN_CPP_PORTING_API UOBRTitleWidget : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+private:
+	UPROPERTY(meta = (BindWidget))
 	class UButton* StartButton;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(meta = (BindWidget))
 	UButton* QuitButton;
 
 	UFUNCTION()
@@ -29,7 +29,4 @@ public:
 
 	UFUNCTION()
 	void OnQuitButtonClicked();
-
-private:
-
 };

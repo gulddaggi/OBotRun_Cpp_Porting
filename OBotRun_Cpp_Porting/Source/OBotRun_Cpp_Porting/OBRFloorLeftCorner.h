@@ -19,18 +19,6 @@ private:
 
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallFD;
-
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallFU;
-
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallRD;
-
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallRU;
-
 	UPROPERTY(VisibleAnywhere, Category = Trigger)
 	UBoxComponent* TurnZone;
 
@@ -42,5 +30,18 @@ private:
 
 	UFUNCTION()
 	void OnSideWallHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallFD;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallFU;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallRD;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallRU;
 
 };

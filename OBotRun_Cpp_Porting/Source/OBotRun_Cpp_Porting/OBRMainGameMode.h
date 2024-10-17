@@ -22,17 +22,19 @@ public:
 	UPROPERTY()
 	class AOBRFloorSpawner* Spawner;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
 	TSubclassOf<class UOBRHUDWidget> HUDWidgetClass;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
 	TSubclassOf<class UOBRGameOverWidget> GameOverWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Spawner)
+	TSubclassOf<class AOBRFloorSpawner> FloorSpawnerClass;
 
 	void AddScore(int Value);
 	void GameOver();
 	void ActivateShield();
 	void DeactivateShield();
-
 	int GetDifficulty();
 
 	FOnDifficultyChanged OnDifficultyChanged;
@@ -48,6 +50,6 @@ private:
 	int Difficulty;
 
 	int Score;
-	void CheckDifficulty();
 
+	void CheckDifficulty();
 };

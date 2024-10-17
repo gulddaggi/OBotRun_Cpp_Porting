@@ -1,27 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "OBRBlock.h"
 #include "OBRCharacter.h"
 
-// Sets default values
 AOBRBlock::AOBRBlock()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_BLOCK(TEXT("/Game/StackOBot/Environment/Props/SM_Crate.SM_Crate"));
-	if (SM_BLOCK.Succeeded())
-	{
-		Mesh->SetStaticMesh(SM_BLOCK.Object);
-	}
-
 	SetRootComponent(Mesh);
 }
 
-// Called when the game starts or when spawned
 void AOBRBlock::BeginPlay()
 {
 	Super::BeginPlay();

@@ -17,18 +17,6 @@ class OBOTRUN_CPP_PORTING_API AOBRFloorStraight : public AOBRFloor
 private:
 	AOBRFloorStraight();
 
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallLD;
-
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallLU;
-
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallRD;
-
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
-	UStaticMeshComponent* WallRU;
-
 	TArray<FVector> BlockSpawnVectors;
 	TArray<FVector> CoinSpawnVectors;
 
@@ -41,13 +29,22 @@ private:
 	void SetCoinSpawnedLineNum(int Index);
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallLD;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallLU;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallRD;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Mesh)
+	UStaticMeshComponent* WallRU;
+
 	bool EnableSpawn;
 
 	FVector& GetBlockSpawnVector(int Index);
 	FVector& GetCoinSpawnVector(int Index);
 	FVector& GetShieldSpawnVector();
-
 	int GetBlockSpawnedLineNum() const;
-	
-	
 };

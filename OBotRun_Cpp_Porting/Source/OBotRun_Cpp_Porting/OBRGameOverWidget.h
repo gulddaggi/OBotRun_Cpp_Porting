@@ -20,19 +20,19 @@ protected:
 public:
 	void SetScore(int Value);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	class UTextBlock* ScoreText;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	class UButton* RestartButton;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	UButton* QuitButton;
-
 private:
 	UFUNCTION()
 	void OnRestartButtonClicked();
 
 	UFUNCTION()
 	void OnQuitButtonClicked();
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ScoreText;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* RestartButton;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* QuitButton;
 };

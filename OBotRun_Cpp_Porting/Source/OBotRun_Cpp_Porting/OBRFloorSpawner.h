@@ -12,19 +12,32 @@ class OBOTRUN_CPP_PORTING_API AOBRFloorSpawner : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AOBRFloorSpawner();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION()
 	void SpawnStraightFloor(int SpawnCount = 1, bool EnableSpawnObs = true);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Block)
+	TSubclassOf<class AOBRBlock> BlockClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Coin)
+	TSubclassOf<class AOBRCoin> CoinClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Floor)
+	TSubclassOf<class AOBRFloorStraight> FloorStraightClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Floor)
+	TSubclassOf<class AOBRFloorRightCorner> FloorRightCornerClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Floor)
+	TSubclassOf<class AOBRFloorLeftCorner> FloorLeftCornerClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Shield)
+	TSubclassOf<class AOBRShield> ShieldClass;
 
 private:
 	void SpawnCurveFloor();

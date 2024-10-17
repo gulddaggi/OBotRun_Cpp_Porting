@@ -17,7 +17,7 @@ void AOBRMainGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Spawner = GetWorld()->SpawnActor<AOBRFloorSpawner>(AOBRFloorSpawner::StaticClass());
+	Spawner = GetWorld()->SpawnActor<AOBRFloorSpawner>(FloorSpawnerClass);
 	Spawner->SpawnStraightFloor(7, false);
 
 	HUDWidget = CreateWidget<UOBRHUDWidget>(GetWorld(), HUDWidgetClass);
@@ -30,10 +30,7 @@ void AOBRMainGameMode::AddScore(int Value)
 	Score += Value;
 	HUDWidget->UpdateScore(Score);
 
-	if (Difficulty != 3)
-	{
-		CheckDifficulty();
-	}
+	if (Difficulty != 3) CheckDifficulty();
 }
 
 void AOBRMainGameMode::CheckDifficulty()

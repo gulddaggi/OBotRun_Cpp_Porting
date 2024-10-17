@@ -29,7 +29,4 @@ private:
 	void SpawnFloor();
 
 	FTransform SpawnPoint;
-
-
-
 };
