@@ -68,6 +68,7 @@ private:
 	int RunningScore;
 	bool IsDead;
 	bool EnableShield;
+	float AddingSpeed;
 
 	void SetEnableJump();
 	void MoveRightOBot(const FInputActionValue& Value);
@@ -86,4 +87,6 @@ public:
 	bool Dead();
 	void SetEnableShield(bool Value);
 	void UseShield(float multAxisValue);
+	void SetRunningScore(int Value);
+	void SetAddingSpeed(float Value);
 };

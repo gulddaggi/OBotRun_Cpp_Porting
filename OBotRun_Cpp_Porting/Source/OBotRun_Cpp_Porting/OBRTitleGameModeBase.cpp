@@ -24,7 +24,7 @@ void AOBRTitleGameModeBase::BeginPlay()
 
 void AOBRTitleGameModeBase::SpawnFloor()
 {
-	AOBRFloorStraight* SpawnedFloor = GetWorld()->SpawnActor<AOBRFloorStraight>(AOBRFloorStraight::StaticClass(), SpawnPoint);
+	AOBRFloorStraight* SpawnedFloor = GetWorld()->SpawnActor<AOBRFloorStraight>(FloorStraightClass, SpawnPoint);
 	SpawnPoint = SpawnedFloor->GetNextSpawnTransform();
 	SpawnedFloor->OnPlayerReachedEndTrigger.AddLambda([this]()-> void { SpawnFloor(); });
 }

@@ -44,6 +44,7 @@ AOBRCharacter::AOBRCharacter()
 	IsDead = false;
 	MainGameMode = nullptr;
 	EnableShield = false;
+	AddingSpeed = 0.05f;
 }
 
 void AOBRCharacter::BeginPlay()
@@ -65,7 +66,6 @@ void AOBRCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!IsDead) GetCharacterMovement()->MaxWalkSpeed += (5.0f * GetWorld()->DeltaTimeSeconds);
 	if (GetActorLocation().Z <= -100.0f) Dead();
 }
 
@@ -111,7 +111,8 @@ void AOBRCharacter::JumpOBot()
 
 void AOBRCharacter::MoveForward()
 {
-	AddMovementInput(GetActorForwardVector() * 2);
+	AddMovementInput(GetActorForwardVector() * 2.0f);
+	if (!IsDead) GetCharacterMovement()->MaxWalkSpeed += AddingSpeed;
 }
 
 void AOBRCharacter::SetEnableJump()
@@ -179,4 +180,14 @@ void AOBRCharacter::UseShield(float MultAxisValue)
 void AOBRCharacter::DeactivateShieldEffect()
 {
 	ShieldEffect->Deactivate();
+}
+
+void AOBRCharacter::SetRunningScore(int Value)
+{
+	RunningScore = Value;
+}
+
+void AOBRCharacter::SetAddingSpeed(float Value)
+{
+	AddingSpeed = Value;
 }

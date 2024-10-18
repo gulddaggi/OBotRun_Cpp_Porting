@@ -35,15 +35,21 @@ void AOBRMainGameMode::AddScore(int Value)
 
 void AOBRMainGameMode::CheckDifficulty()
 {
-	if (Score >= 10000)
+	if (Score >= 15000)
 	{
 		Difficulty = 3;
+		auto OBot = Cast<AOBRCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		OBot->SetRunningScore(50);
+		OBot->SetAddingSpeed(0.5f);
 		OnDifficultyChanged.Broadcast();
 	}
-	else if (Score >= 5000)
+	else if (Score >= 7500)
 	{
 		if (Difficulty == 1)
 		{
+			auto OBot = Cast<AOBRCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			OBot->SetRunningScore(30);
+			OBot->SetAddingSpeed(0.1f);
 			Difficulty = 2;
 			OnDifficultyChanged.Broadcast();
 		}

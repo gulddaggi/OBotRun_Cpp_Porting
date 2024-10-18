@@ -17,8 +17,11 @@ class OBOTRUN_CPP_PORTING_API AOBRTitleGameModeBase : public AGameModeBase
 public:
 	AOBRTitleGameModeBase();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = UI)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
 	TSubclassOf<class UOBRTitleWidget> TitleWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Floor)
+	TSubclassOf<class AOBRFloorStraight> FloorStraightClass;
 
 protected:
 	virtual void BeginPlay() override;
